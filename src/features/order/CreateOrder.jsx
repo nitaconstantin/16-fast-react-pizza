@@ -2,6 +2,7 @@
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
+import { useSelector } from "react-redux";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -37,6 +38,7 @@ function CreateOrder() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
+  const username = useSelector((state) => state.user.username);
 
   // const [withPriority, setWithPriority] = useState(false);
   const cart = fakeCart;
@@ -49,27 +51,47 @@ function CreateOrder() {
       <Form method="POST">
         <div className="mb-5 flex gap-2 flex-col sm:flex-row sm:items-center">
           <label className="sm:basis-40">First Name</label>
-          <input type="text" name="customer" required className="grow rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 md:px-6 md:py-3"/>
+          <input
+            type="text"
+            name="customer"
+            required
+            className="grow rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 md:px-6 md:py-3"
+            defaultValue={username}
+          />
         </div>
 
         <div className="mb-5 flex gap-2 flex-col sm:flex-row sm:items-center">
-          <label  className="sm:basis-40">Phone number</label>
+          <label className="sm:basis-40">Phone number</label>
           <div className="grow">
-            <input type="tel" name="phone" required className="rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 w-full md:px-6 md:py-3"/>
-          {formErrors?.phone && <p className="text-xs mt-2 font-semibold text-red-700 bg-red-100 p-2 rounded-md">{formErrors.phone}</p>}
+            <input
+              type="tel"
+              name="phone"
+              required
+              className="rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 w-full md:px-6 md:py-3"
+            />
+            {formErrors?.phone && (
+              <p className="text-xs mt-2 font-semibold text-red-700 bg-red-100 p-2 rounded-md">
+                {formErrors.phone}
+              </p>
+            )}
           </div>
-          
         </div>
 
         <div className="mb-5 flex gap-2 flex-col sm:flex-row sm:items-center">
-          <label  className="sm:basis-40">Address</label>
+          <label className="sm:basis-40">Address</label>
           <div className="grow">
-            <input className="rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 w-full md:px-6 md:py-3" type="text" name="address" required />
+            <input
+              className="rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-400 w-full md:px-6 md:py-3"
+              type="text"
+              name="address"
+              required
+            />
           </div>
         </div>
 
         <div className="mb-12 flex gap-5 items-center">
-          <input className="h-6 w-6 accent-yellow-400 focus:ring-yellow-300 focus:outline-none focus:ring focus:ring-offset-2"
+          <input
+            className="h-6 w-6 accent-yellow-400 focus:ring-yellow-300 focus:outline-none focus:ring focus:ring-offset-2"
             type="checkbox"
             name="priority"
             id="priority"
@@ -77,11 +99,13 @@ function CreateOrder() {
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <label htmlFor="priority"className="font-medium">Want to yo give your order priority?</label>
+          <label htmlFor="priority" className="font-medium">
+            Want to yo give your order priority?
+          </label>
         </div>
 
         <div>
-          <Button disabled={isSubmitting} type='primary'>
+          <Button disabled={isSubmitting} type="primary">
             {isSubmitting ? "Placing order... " : "Order now"}
           </Button>
         </div>
